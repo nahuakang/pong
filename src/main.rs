@@ -14,19 +14,38 @@ fn main() -> tetra::Result {
         .run(GameState::new)
 }
 
+struct Entity {
+    texture: Texture,
+    position: Vec2<f32>,
+}
+
+impl Entity {
+    fn new(texture: Texture, position: Vec2<f32>) -> Self {
+        Self { texture, position }
+    }
+}
+
 struct GameState {
-    paddle_texture: Texture,
-    paddle_position: Vec2<f32>,
+    player1: Entity,
+    player2: Entity,
 }
 
 impl GameState {
-    fn new(ctx: &mut Context) -> tetra::Result<GameState> {
-        let paddle_texture = Texture::new(ctx, "./resources/player1.png")?;
-        let paddle_position =
-            Vec2::new(16.0, (WINDOW_HEIGHT - paddle_texture.height() as f32) / 2.0);
+    fn new(ctx: &mut Context) -> tetra::Result<Self> {
+        let player1_texture = Texture::new(ctx, "./resources/player1.png")?;
+        let player1_position = Vec2::new(
+            16.0,
+            (WINDOW_HEIGHT - player1_texture.height() as f32) / 2.0,
+        );
+        let player2_texture = Texture::new(ctx, "./resources/player2.png")?;
+        let player2_position = Vec2::new(
+            WINDOW_WIDTH - player2_texture.width() as f32 - 16.0,
+            (WINDOW_HEIGHT - player2_texture.height() as f32) / 2.0,
+        );
+
         Ok(GameState {
-            paddle_texture,
-            paddle_position,
+            player1: Entity::new(player1_texture, player1_position),
+            player2: Entity::new(player2_texture, player2_position),
         })
     }
 }
@@ -36,17 +55,26 @@ impl State for GameState {
         // Clear to a specific background color
         graphics::clear(ctx, Color::rgb(0.392, 0.584, 0.929));
         // Draw texture
-        graphics::draw(ctx, &self.paddle_texture, self.paddle_position);
+        graphics::draw(ctx, &self.player1.texture, self.player1.position);
+        graphics::draw(ctx, &self.player2.texture, self.player2.position);
         Ok(())
     }
 
     fn update(&mut self, ctx: &mut Context) -> tetra::Result {
-        if input::is_key_down(ctx, Key::W) || input::is_key_down(ctx, Key::Up) {
-            self.paddle_position.y -= PADDLE_SPEED;
+        if input::is_key_down(ctx, Key::W) {
+            self.player1.position.y -= PADDLE_SPEED;
         }
 
-        if input::is_key_down(ctx, Key::S) || input::is_key_down(ctx, Key::Down) {
-            self.paddle_position.y += PADDLE_SPEED;
+        if input::is_key_down(ctx, Key::S) {
+            self.player1.position.y += PADDLE_SPEED;
+        }
+
+        if input::is_key_down(ctx, Key::Up) {
+            self.player2.position.y -= PADDLE_SPEED;
+        }
+
+        if input::is_key_down(ctx, Key::Down) {
+            self.player2.position.y += PADDLE_SPEED;
         }
 
         Ok(())
