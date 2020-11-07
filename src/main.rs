@@ -1,11 +1,13 @@
-use tetra::graphics::{self, Color, Texture};
+use tetra::graphics::{self, Color, Rectangle, Texture};
 use tetra::input::{self, Key};
 use tetra::math::Vec2;
+use tetra::window;
 use tetra::{Context, ContextBuilder, State};
 
 const WINDOW_WIDTH: f32 = 640.0;
 const WINDOW_HEIGHT: f32 = 480.0;
 const PADDLE_SPEED: f32 = 8.0;
+const BALL_SPEED: f32 = 5.0;
 
 fn main() -> tetra::Result {
     ContextBuilder::new("Pong", WINDOW_WIDTH as i32, WINDOW_HEIGHT as i32)
@@ -17,11 +19,24 @@ fn main() -> tetra::Result {
 struct Entity {
     texture: Texture,
     position: Vec2<f32>,
+    velocity: Vec2<f32>,
 }
 
 impl Entity {
     fn new(texture: Texture, position: Vec2<f32>) -> Self {
-        Self { texture, position }
+        Self {
+            texture,
+            position,
+            velocity: Vec2::zero(),
+        }
+    }
+
+    fn with_velocity(texture: Texture, position: Vec2<f32>, velocity: Vec2<f32>) -> Self {
+        Self {
+            texture,
+            position,
+            velocity,
+        }
     }
 }
 
@@ -49,10 +64,12 @@ impl GameState {
             WINDOW_HEIGHT / 2.0 - ball_texture.height() as f32 / 2.0,
         );
 
+        let ball_velocity = Vec2::new(-BALL_SPEED, 0.0);
+
         Ok(GameState {
             player1: Entity::new(player1_texture, player1_position),
             player2: Entity::new(player2_texture, player2_position),
-            ball: Entity::new(ball_texture, ball_position),
+            ball: Entity::with_velocity(ball_texture, ball_position, ball_velocity),
         })
     }
 }
@@ -84,6 +101,8 @@ impl State for GameState {
         if input::is_key_down(ctx, Key::Down) {
             self.player2.position.y += PADDLE_SPEED;
         }
+
+        self.ball.position += self.ball.velocity;
 
         Ok(())
     }
