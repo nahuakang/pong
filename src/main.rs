@@ -38,6 +38,23 @@ impl Entity {
             velocity,
         }
     }
+
+    fn width(&self) -> f32 {
+        self.texture.width() as f32
+    }
+
+    fn height(&self) -> f32 {
+        self.texture.height() as f32
+    }
+
+    fn bounds(&self) -> Rectangle {
+        Rectangle::new(
+            self.position.x,
+            self.position.y,
+            self.width(),
+            self.height(),
+        )
+    }
 }
 
 struct GameState {
@@ -103,6 +120,22 @@ impl State for GameState {
         }
 
         self.ball.position += self.ball.velocity;
+
+        let player1_bounds = self.player1.bounds();
+        let player2_bounds = self.player2.bounds();
+        let ball_bounds = self.ball.bounds();
+
+        let paddle_hit = if ball_bounds.intersects(&player1_bounds) {
+            Some(&self.player1)
+        } else if ball_bounds.intersects(&player2_bounds) {
+            Some(&self.player1)
+        } else {
+            None
+        };
+
+        if paddle_hit.is_some() {
+            self.ball.velocity.x = -self.ball.velocity.x;
+        }
 
         Ok(())
     }
