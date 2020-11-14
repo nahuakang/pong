@@ -39,7 +39,7 @@ impl GameScene {
 
         let ball_velocity = Vec2::new(-BALL_SPEED, 0.0);
 
-        Ok(GameState {
+        Ok(GameScene {
             player1: Entity::new(player1_texture, player1_position),
             player2: Entity::new(player2_texture, player2_position),
             ball: Entity::with_velocity(ball_texture, ball_position, ball_velocity),

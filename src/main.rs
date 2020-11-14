@@ -1,7 +1,7 @@
 mod elements;
-mod game;
+mod scenes;
 
-use game::{GameScene, WINDOW_HEIGHT, WINDOW_WIDTH};
+use scenes::game::{GameScene, WINDOW_HEIGHT, WINDOW_WIDTH};
 
 use tetra::ContextBuilder;
 
