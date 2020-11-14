@@ -13,13 +13,13 @@ const BALL_SPEED: f32 = 5.0;
 const PADDLE_SPIN: f32 = 4.0;
 const BALL_ACC: f32 = 0.05;
 
-pub struct GameState {
+pub struct GameScene {
     player1: Entity,
     player2: Entity,
     ball: Entity,
 }
 
-impl GameState {
+impl GameScene {
     pub fn new(ctx: &mut Context) -> tetra::Result<Self> {
         let player1_texture = Texture::new(ctx, "./resources/player1.png")?;
         let player1_position = Vec2::new(
@@ -47,7 +47,7 @@ impl GameState {
     }
 }
 
-impl State for GameState {
+impl State for GameScene {
     fn draw(&mut self, ctx: &mut Context) -> tetra::Result {
         // Clear to a specific background color
         graphics::clear(ctx, Color::rgb(0.392, 0.584, 0.929));
