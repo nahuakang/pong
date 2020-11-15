@@ -1,9 +1,10 @@
 use crate::elements::Entity;
+use crate::scenes::manager::{Scene, Transition};
 
 use tetra::graphics::{self, Color, Texture};
 use tetra::input::{self, Key};
 use tetra::math::Vec2;
-use tetra::{Context, State};
+use tetra::Context;
 use tetra::window;
 
 pub const WINDOW_WIDTH: f32 = 640.0;
@@ -47,18 +48,19 @@ impl GameScene {
     }
 }
 
-impl State for GameScene {
-    fn draw(&mut self, ctx: &mut Context) -> tetra::Result {
+impl Scene for GameScene {
+    fn draw(&mut self, ctx: &mut Context) -> tetra::Result<Transition> {
         // Clear to a specific background color
         graphics::clear(ctx, Color::rgb(0.392, 0.584, 0.929));
         // Draw texture
         graphics::draw(ctx, &self.player1.texture, self.player1.position);
         graphics::draw(ctx, &self.player2.texture, self.player2.position);
         graphics::draw(ctx, &self.ball.texture, self.ball.position);
-        Ok(())
+        // TODO: Make sure to return the right transition
+        Ok(Transition::None)
     }
 
-    fn update(&mut self, ctx: &mut Context) -> tetra::Result {
+    fn update(&mut self, ctx: &mut Context) -> tetra::Result<Transition> {
         if input::is_key_down(ctx, Key::W) {
             self.player1.position.y -= PADDLE_SPEED;
         }
@@ -118,7 +120,7 @@ impl State for GameScene {
             window::quit(ctx);
             println!("Player 1 wins!");
         }
-
-        Ok(())
+        // TODO: Make sure to return the right transition
+        Ok(Transition::None)
     }
 }
