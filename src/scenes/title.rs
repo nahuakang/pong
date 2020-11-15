@@ -1,5 +1,6 @@
 use crate::scenes::game::GameScene;
 use crate::scenes::manager::{Scene, Transition};
+use crate::scenes::game::{WINDOW_HEIGHT, WINDOW_WIDTH};
 
 use tetra::Context;
 use tetra::graphics::{self, Color};
@@ -16,21 +17,21 @@ impl TitleScene {
     pub fn new(ctx: &mut Context) -> tetra::Result<Self> {
         let title = Text::new(
             "Welcome to PONG!",
-            Font::vector(ctx, "./resources/DaysOne-Regular.ttf", 16.0)?,
+            Font::vector(ctx, "./resources/DaysOne-Regular.ttf", 30.0)?,
         );
 
         println!("Text bounds are {:?}", title.get_bounds(ctx));
 
         Ok(TitleScene{
             title,
-            pos: Vec2::new(16.0, 16.0),
+            pos: Vec2::new((WINDOW_WIDTH - 16.0 * 16.0) / 2.0, (WINDOW_HEIGHT - 30.0) / 2.0),
         })
     }
 }
 
 impl Scene for TitleScene {
     fn draw(&mut self, ctx: &mut Context) -> tetra::Result<Transition> {
-        graphics::clear(ctx, Color::rgb(0.122, 0.055, 0.11));
+        graphics::clear(ctx, Color::rgb(0.2, 0.2, 0.2));
         graphics::draw(ctx, &self.title, self.pos);
 
         Ok(Transition::None)

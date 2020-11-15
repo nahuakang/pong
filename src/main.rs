@@ -1,7 +1,7 @@
 mod elements;
 mod scenes;
 
-use scenes::game::{GameScene, WINDOW_HEIGHT, WINDOW_WIDTH};
+use scenes::game::{WINDOW_HEIGHT, WINDOW_WIDTH};
 use scenes::manager::SceneManager;
 use scenes::title::TitleScene;
 
